@@ -1,0 +1,56 @@
+{
+  "connection": "default",
+  "collectionName": "projects",
+  "info": {
+    "name": "project",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "comment": ""
+  },
+  "attributes": {
+    "title": {
+      "unique": true,
+      "required": true,
+      "type": "string"
+    },
+    "shortDescription": {
+      "type": "text"
+    },
+    "description": {
+      "type": "text"
+    },
+    "thumb": {
+      "model": "file",
+      "via": "related",
+      "plugin": "upload"
+    },
+    "tags": {
+      "collection": "tag",
+      "via": "projects",
+      "dominant": true
+    },
+    "presses": {
+      "collection": "press",
+      "via": "projects"
+    },
+    "scoreURL": {
+      "type": "string"
+    },
+    "codeURL": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "mediaEmbed": {
+      "type": "text"
+    },
+    "sortOrder": {
+      "type": "integer",
+      "default": "0"
+    }
+  }
+}

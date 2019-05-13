@@ -1,0 +1,411 @@
+input createPressInput {
+  data: PressInput
+}
+
+type createPressPayload {
+  press: Press
+}
+
+input createProjectInput {
+  data: ProjectInput
+}
+
+type createProjectPayload {
+  project: Project
+}
+
+input createRoleInput {
+  data: RoleInput
+}
+
+type createRolePayload {
+  role: UsersPermissionsRole
+}
+
+input createTagInput {
+  data: TagInput
+}
+
+type createTagPayload {
+  tag: Tag
+}
+
+input createUserInput {
+  data: UserInput
+}
+
+type createUserPayload {
+  user: UsersPermissionsUser
+}
+
+"""
+The `DateTime` scalar represents a date and time following the ISO 8601 standard
+"""
+scalar DateTime
+
+input deletePressInput {
+  where: InputID
+}
+
+type deletePressPayload {
+  press: Press
+}
+
+input deleteProjectInput {
+  where: InputID
+}
+
+type deleteProjectPayload {
+  project: Project
+}
+
+input deleteRoleInput {
+  where: InputID
+}
+
+type deleteRolePayload {
+  role: UsersPermissionsRole
+}
+
+input deleteTagInput {
+  where: InputID
+}
+
+type deleteTagPayload {
+  tag: Tag
+}
+
+input deleteUserInput {
+  where: InputID
+}
+
+type deleteUserPayload {
+  user: UsersPermissionsUser
+}
+
+input editFileInput {
+  name: String
+  hash: String
+  sha256: String
+  ext: String
+  mime: String
+  size: String
+  url: String
+  provider: String
+  public_id: String
+  related: [ID]
+}
+
+input editPressInput {
+  title: String
+  url: String
+  description: String
+  projects: [ID]
+  publicationDate: DateTime
+}
+
+input editProjectInput {
+  title: String
+  shortDescription: String
+  description: String
+  thumb: ID
+  tags: [ID]
+  presses: [ID]
+  scoreURL: String
+  codeURL: String
+  url: String
+  mediaEmbed: String
+  sortOrder: Int
+}
+
+input editRoleInput {
+  name: String
+  description: String
+  type: String
+  permissions: [ID]
+  users: [ID]
+}
+
+input editTagInput {
+  title: String
+  projects: [ID]
+}
+
+input editUserInput {
+  username: String
+  email: String
+  provider: String
+  password: String
+  resetPasswordToken: String
+  confirmed: Boolean
+  blocked: Boolean
+  role: ID
+}
+
+input FileInput {
+  name: String!
+  hash: String!
+  sha256: String
+  ext: String
+  mime: String!
+  size: String!
+  url: String!
+  provider: String!
+  public_id: String
+  related: [ID]
+}
+
+input InputID {
+  id: ID!
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+"""The `Long` scalar type represents 52-bit integers"""
+scalar Long
+
+union Morph = UsersPermissionsMe | UsersPermissionsMeRole | Press | createPressPayload | updatePressPayload | deletePressPayload | Project | createProjectPayload | updateProjectPayload | deleteProjectPayload | Tag | createTagPayload | updateTagPayload | deleteTagPayload | UploadFile | UsersPermissionsPermission | UsersPermissionsRole | createRolePayload | updateRolePayload | deleteRolePayload | UsersPermissionsUser | createUserPayload | updateUserPayload | deleteUserPayload
+
+type Mutation {
+  createPress(input: createPressInput): createPressPayload
+  updatePress(input: updatePressInput): updatePressPayload
+  deletePress(input: deletePressInput): deletePressPayload
+  createProject(input: createProjectInput): createProjectPayload
+  updateProject(input: updateProjectInput): updateProjectPayload
+  deleteProject(input: deleteProjectInput): deleteProjectPayload
+  createTag(input: createTagInput): createTagPayload
+  updateTag(input: updateTagInput): updateTagPayload
+  deleteTag(input: deleteTagInput): deleteTagPayload
+
+  """Create a new role"""
+  createRole(input: createRoleInput): createRolePayload
+
+  """Update an existing role"""
+  updateRole(input: updateRoleInput): updateRolePayload
+
+  """Delete an existing role"""
+  deleteRole(input: deleteRoleInput): deleteRolePayload
+
+  """Create a new user"""
+  createUser(input: createUserInput): createUserPayload
+
+  """Update an existing user"""
+  updateUser(input: updateUserInput): updateUserPayload
+
+  """Delete an existing user"""
+  deleteUser(input: deleteUserInput): deleteUserPayload
+  upload(refId: ID, ref: String, source: String, file: Upload!): UploadFile!
+}
+
+type Press {
+  id: ID!
+  created_at: DateTime!
+  updated_at: DateTime!
+  title: String!
+  url: String
+  description: String
+  publicationDate: DateTime
+  projects(sort: String, limit: Int, start: Int, where: JSON): [Project]
+}
+
+input PressInput {
+  title: String!
+  url: String
+  description: String
+  projects: [ID]
+  publicationDate: DateTime
+}
+
+type Project {
+  id: ID!
+  created_at: DateTime!
+  updated_at: DateTime!
+  title: String!
+  shortDescription: String
+  description: String
+  thumb: UploadFile
+  scoreURL: String
+  codeURL: String
+  url: String
+  mediaEmbed: String
+  sortOrder: Int
+  tags(sort: String, limit: Int, start: Int, where: JSON): [Tag]
+  presses(sort: String, limit: Int, start: Int, where: JSON): [Press]
+}
+
+input ProjectInput {
+  title: String!
+  shortDescription: String
+  description: String
+  thumb: ID
+  tags: [ID]
+  presses: [ID]
+  scoreURL: String
+  codeURL: String
+  url: String
+  mediaEmbed: String
+  sortOrder: Int
+}
+
+type Query {
+  press(id: ID!): Press
+  presses(sort: String, limit: Int, start: Int, where: JSON): [Press]
+  project(id: ID!): Project
+  projects(sort: String, limit: Int, start: Int, where: JSON): [Project]
+  tag(id: ID!): Tag
+  tags(sort: String, limit: Int, start: Int, where: JSON): [Tag]
+  files(sort: String, limit: Int, start: Int, where: JSON): [UploadFile]
+  role(id: ID!): UsersPermissionsRole
+
+  """
+  Retrieve all the existing roles. You can't apply filters on this query.
+  """
+  roles(sort: String, limit: Int, start: Int, where: JSON): [UsersPermissionsRole]
+  user(id: ID!): UsersPermissionsUser
+  users(sort: String, limit: Int, start: Int, where: JSON): [UsersPermissionsUser]
+  me: UsersPermissionsMe
+}
+
+input RoleInput {
+  name: String!
+  description: String
+  type: String
+  permissions: [ID]
+  users: [ID]
+}
+
+type Tag {
+  id: ID!
+  created_at: DateTime!
+  updated_at: DateTime!
+  title: String!
+  projects(sort: String, limit: Int, start: Int, where: JSON): [Project]
+}
+
+input TagInput {
+  title: String!
+  projects: [ID]
+}
+
+input updatePressInput {
+  where: InputID
+  data: editPressInput
+}
+
+type updatePressPayload {
+  press: Press
+}
+
+input updateProjectInput {
+  where: InputID
+  data: editProjectInput
+}
+
+type updateProjectPayload {
+  project: Project
+}
+
+input updateRoleInput {
+  where: InputID
+  data: editRoleInput
+}
+
+type updateRolePayload {
+  role: UsersPermissionsRole
+}
+
+input updateTagInput {
+  where: InputID
+  data: editTagInput
+}
+
+type updateTagPayload {
+  tag: Tag
+}
+
+input updateUserInput {
+  where: InputID
+  data: editUserInput
+}
+
+type updateUserPayload {
+  user: UsersPermissionsUser
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+type UploadFile {
+  id: ID!
+  created_at: DateTime!
+  updated_at: DateTime!
+  name: String!
+  hash: String!
+  sha256: String
+  ext: String
+  mime: String!
+  size: String!
+  url: String!
+  provider: String!
+  public_id: String
+  related(sort: String, limit: Int, start: Int, where: JSON): [Morph]
+}
+
+input UserInput {
+  username: String!
+  email: String!
+  provider: String
+  password: String
+  resetPasswordToken: String
+  confirmed: Boolean
+  blocked: Boolean
+  role: ID
+}
+
+type UsersPermissionsMe {
+  _id: ID!
+  username: String!
+  email: String!
+  confirmed: Boolean
+  blocked: Boolean
+  role: UsersPermissionsMeRole
+}
+
+type UsersPermissionsMeRole {
+  _id: ID!
+  name: String!
+  description: String
+  type: String
+}
+
+type UsersPermissionsPermission {
+  id: ID!
+  type: String!
+  controller: String!
+  action: String!
+  enabled: Boolean!
+  policy: String
+  role: UsersPermissionsRole
+}
+
+type UsersPermissionsRole {
+  id: ID!
+  name: String!
+  description: String
+  type: String
+  permissions(sort: String, limit: Int, start: Int, where: JSON): [UsersPermissionsPermission]
+  users(sort: String, limit: Int, start: Int, where: JSON): [UsersPermissionsUser]
+}
+
+type UsersPermissionsUser {
+  id: ID!
+  username: String!
+  email: String!
+  provider: String
+  confirmed: Boolean
+  blocked: Boolean
+  role: UsersPermissionsRole
+}

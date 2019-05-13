@@ -1,0 +1,34 @@
+{
+  "connection": "default",
+  "collectionName": "presses",
+  "info": {
+    "name": "press",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "comment": ""
+  },
+  "attributes": {
+    "title": {
+      "required": true,
+      "type": "string",
+      "unique": true
+    },
+    "url": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "projects": {
+      "collection": "project",
+      "dominant": true,
+      "via": "presses"
+    },
+    "publicationDate": {
+      "type": "date"
+    }
+  }
+}
